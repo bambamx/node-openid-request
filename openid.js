@@ -27,7 +27,7 @@ var convert = require('./lib/convert'),
     crypto = require('crypto'),
     http = require('http'),
     https = require('https'),
-	  request = require('request'),
+	request = require('request'),
     querystring = require('querystring'),
     url = require('url'),
     xrds = require('./lib/xrds');
@@ -187,12 +187,12 @@ var _proxyRequest = function(protocol, options)
 
       var targetHostAndPort = (isNaN(options.port) || (options.port === null)) ? targetHost : targetHost + ':' + options.port;
 
-      options.host = proxyHostname;
-      options.port = proxyPort;
-      options.path = protocol + '//' + targetHostAndPort + options.path;
+      // options.host = proxyHostname;
+      // options.port = proxyPort;
+      // options.path = protocol + '//' + targetHostAndPort + options.path;
       options.headers['Host'] = targetHostAndPort;
-	    options.proxy = proxyHostname + ':' + proxyPort;
-	    options.proxy_request = protocol + '//' + targetHostAndPort;
+	  options.proxy = proxyHostname + ':' + proxyPort;
+	  //options.proxy_request = protocol + '//' + targetHostAndPort;
     }
   };
   if ('https:' === protocol &&
@@ -209,29 +209,29 @@ var _proxyRequest = function(protocol, options)
   return newProtocol;
 }
 
-var _get = function(getUrl, params, callback, redirects)
+var _get = function(getUrl, params, callback)
 {
-  redirects = redirects || 5;
+  //redirects = redirects || 5;
   getUrl = url.parse(_buildUrl(getUrl, params));
 
-  var path = getUrl.pathname || '/';
-  if(getUrl.query)
-  {
-    path += '?' + getUrl.query;
-  }
+  // var path = getUrl.pathname || '/';
+  // if(getUrl.query)
+  // {
+    // path += '?' + getUrl.query;
+  // }
   var options =
   {
-    host: getUrl.hostname,
-    port: _isDef(getUrl.port) ? parseInt(getUrl.port, 10) :
-      (getUrl.protocol == 'https:' ? 443 : 80),
-    headers: { 'Accept' : 'application/xrds+xml,text/html,text/plain,*/*' },
-    path: path
+    // host: getUrl.hostname,
+    // port: _isDef(getUrl.port) ? parseInt(getUrl.port, 10) :
+      // (getUrl.protocol == 'https:' ? 443 : 80),
+    headers: { 'Accept' : 'application/xrds+xml,text/html,text/plain,*/*' }
+    //path: path
   };
 
   var protocol = _proxyRequest(getUrl.protocol, options);
 
   if(options.proxy !== undefined){
-  	request({'url': options.proxy_request, 'proxy': options.proxy, 'headers': options.headers }, function (error, response, body) {
+  	request({'url': getUrl.href, 'proxy': options.proxy, 'headers': options.headers }, function (error, response, body) {
   	  if (!error && response.statusCode == 200) {
     		callback(body, response.headers, response.statusCode);
   	  } else {
@@ -241,68 +241,76 @@ var _get = function(getUrl, params, callback, redirects)
   	});
   }else{
     //TODO
-	  (protocol == 'https:' ? https : http).get(options, function(res)
-	  {
-		var data = '';
-		res.on('data', function(chunk)
-		{
-		  data += chunk;
-		});
-
-		var isDone = false;
-		var done = function()
-		{
-		  if (isDone) return;
-		  isDone = true;
-
-		  if(res.headers.location && --redirects)
-		  {
-			var redirectUrl = res.headers.location;
-			if(redirectUrl.indexOf('http') !== 0)
-			{
-			  redirectUrl = getUrl.protocol + '//' + getUrl.hostname + ':' + options.port + (redirectUrl.indexOf('/') === 0 ? redirectUrl : '/' + redirectUrl);
-			}
-			_get(redirectUrl, params, callback, redirects);
-		  }
-		  else
-		  {
-			callback(data, res.headers, res.statusCode);
-		  }
+	request({ 'url': getUrl.href, 'headers': options.headers }, function(error, response, body) {
+		if (!error && response.statusCode == 200) {
+			callback(body, response.headers, response.statusCode);
+		} else {
+			console.log(error);
+			return callback(error);
 		}
+	});
+	  // (protocol == 'https:' ? https : http).get(options, function(res)
+	  // {
+		// var data = '';
+		// res.on('data', function(chunk)
+		// {
+		  // data += chunk;
+		// });
 
-		res.on('end', function() { done(); });
-		res.on('close', function() { done(); });
-	  }).on('error', function(error)
-	  {
-		return callback(error);
-	  });
+		// var isDone = false;
+		// var done = function()
+		// {
+		  // if (isDone) return;
+		  // isDone = true;
+
+		  // if(res.headers.location && --redirects)
+		  // {
+			// var redirectUrl = res.headers.location;
+			// if(redirectUrl.indexOf('http') !== 0)
+			// {
+			  // redirectUrl = getUrl.protocol + '//' + getUrl.hostname + ':' + options.port + (redirectUrl.indexOf('/') === 0 ? redirectUrl : '/' + redirectUrl);
+			// }
+			// _get(redirectUrl, params, callback, redirects);
+		  // }
+		  // else
+		  // {
+			// callback(data, res.headers, res.statusCode);
+		  // }
+		// }
+
+		// res.on('end', function() { done(); });
+		// res.on('close', function() { done(); });
+	  // }).on('error', function(error)
+	  // {
+		// return callback(error);
+	  // });
   }
 }
 
-var _post = function(postUrl, data, callback, redirects)
+var _post = function(postUrl, data, callback)
 {
-  redirects = redirects || 5;
+  //redirects = redirects || 5;
   postUrl = url.parse(postUrl);
 
-  var path = postUrl.pathname || '/';
-  if(postUrl.query)
-  {
-    path += '?' + postUrl.query;
-  }
+  // var path = postUrl.pathname || '/';
+  // if(postUrl.query)
+  // {
+    // path += '?' + postUrl.query;
+  // }
 
   var encodedData = _encodePostData(data);
   var options =
   {
-    host: postUrl.hostname,
-    path: path,
-    port: _isDef(postUrl.port) ? postUrl.port :
-      (postUrl.protocol == 'https:' ? 443 : 80),
-    headers:
-    {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Content-Length': encodedData.length
-    },
-    method: 'POST'
+    // host: postUrl.hostname,
+    // path: path,
+    // port: _isDef(postUrl.port) ? postUrl.port :
+      // (postUrl.protocol == 'https:' ? 443 : 80),
+    // headers:
+    // {
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+      // 'Content-Length': encodedData.length
+    // },
+    // method: 'POST'
   };
   
   var protocol = _proxyRequest(postUrl.protocol, options);
@@ -317,37 +325,45 @@ var _post = function(postUrl, data, callback, redirects)
   	}).form(data);
   }else{
     //TODO
-    (protocol == 'https:' ? https : http).request(options, function(res)
-    {
-      var data = '';
-      res.on('data', function(chunk)
-      {
-        data += chunk;
-      });
+	request.post({'url': postUrl.href, 'headers': { 'Content-Type': 'application/x-www-form-urlencoded', 'Content-Length': encodedData.length } }, function (error, response, body) {
+  	  if (!error && response.statusCode == 200) {
+    		callback(body, response.headers, response.statusCode);
+  	  } else {
+    		return callback(error);
+  	  }
+  	}).form(data);
+	
+    // (protocol == 'https:' ? https : http).request(options, function(res)
+    // {
+      // var data = '';
+      // res.on('data', function(chunk)
+      // {
+        // data += chunk;
+      // });
   
-      var isDone = false;
-      var done = function()
-      {
-        if (isDone) return;
-        isDone = true;
+      // var isDone = false;
+      // var done = function()
+      // {
+        // if (isDone) return;
+        // isDone = true;
   
-        if(res.headers.location && --redirects)
-        {
-          _post(res.headers.location, data, callback, redirects);
-        }
-        else
-        {
-          callback(data, res.headers, res.statusCode);
-        }
-      }
+        // if(res.headers.location && --redirects)
+        // {
+          // _post(res.headers.location, data, callback, redirects);
+        // }
+        // else
+        // {
+          // callback(data, res.headers, res.statusCode);
+        // }
+      // }
   
-      res.on('end', function() { done(); });
-      res.on('close', function() { done(); });
-    }).on('error', function(error)
-    {
-      return callback(error);
-    }).end(encodedData);
-  }
+      // res.on('end', function() { done(); });
+      // res.on('close', function() { done(); });
+    // }).on('error', function(error)
+    // {
+      // return callback(error);
+    // }).end(encodedData);
+  // }
 }
 
 var _encodePostData = function(data)
