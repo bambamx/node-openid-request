@@ -4,16 +4,16 @@ openid-request takes as baseline the project **node-openid** (https://github.com
 
 All rights reserved to the owners of each project.
 
-Version
+#### Version
 ----
 0.1.1
 
-How to use this package
+#### How to use this package
 -----------
 -Example: https://github.com/bambamx/node-openid-request/raw/master/sample.js
 
 
-License
+#### License
 ----
 MIT
 
