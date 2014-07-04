@@ -1,8 +1,9 @@
 {
-  "name": "openid",
-  "description": "",
+  "name": "openid-request",
+  "description": "OpenID for Node.js, based in (node-openid and request)",
   "keywords": [
     "openid",
+	"request",
     "auth",
     "authentication",
     "identity",
@@ -14,11 +15,11 @@
     "library"
   ],
   "author": {
-    "name": "",
-    "email": "",
-    "web": ""
+    "name": "Rodrigo Montano",
+    "email": "bambamx@hp.com",
+    "web": "https://github.com/bambamx"
   },
-  "version": "0.5.9",
+  "version": "0.1.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/bambamx/node-openid-request.git"
@@ -26,8 +27,7 @@
   "bugs": "https://github.com/bambamx/node-openid-request/issues",
   "licenses": [
     {
-      "type": "MIT",
-      "url": "http://github.com/havard/node-openid/raw/master/LICENSE"
+      "type": "MIT"
     }
   ],
   "directories": {
@@ -40,9 +40,8 @@
   "engines": [
     "node >= 0.6.0"
   ],
-  "dependencies" :
-  {
-	  "request" : "~2.36.0"
+  "dependencies": {
+	"request" : "~2.36.0"
   },
   "devDependencies": {
     "nodeunit": "~0.8.4",
