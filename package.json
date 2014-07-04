@@ -15,7 +15,7 @@
     "library"
   ],
   "author": {
-    "name": "Rodrigo Montaño",
+    "name": "Rodrigo Montano",
     "email": "bambamx@hp.com",
     "web": "https://github.com/bambamx"
   },
@@ -27,7 +27,7 @@
   "bugs": "https://github.com/bambamx/node-openid-request/issues",
   "licenses": [
     {
-      "type": "MIT",
+      "type": "MIT"
     }
   ],
   "directories": {
@@ -40,8 +40,7 @@
   "engines": [
     "node >= 0.6.0"
   ],
-  "dependencies" :
-  {
+  "dependencies": {
 	"request" : "~2.36.0"
   },
   "devDependencies": {
