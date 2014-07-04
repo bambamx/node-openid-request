@@ -6,18 +6,15 @@ All rights reserved to the owners of each project.
 
 Version
 ----
-
 0.1.1
 
 How to use this package
 -----------
--Example: https://github.com/havard/node-openid/raw/master/sample.js
+-Example: https://github.com/bambamx/node-openid-request/raw/master/sample.js
 
 
 License
 ----
-
 MIT
-
 
 **Free Software**
