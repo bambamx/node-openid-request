@@ -186,13 +186,8 @@ var _proxyRequest = function(protocol, options)
       if (! options.headers) options.headers = {};
 
       var targetHostAndPort = (isNaN(options.port) || (options.port === null)) ? targetHost : targetHost + ':' + options.port;
-
-      // options.host = proxyHostname;
-      // options.port = proxyPort;
-      // options.path = protocol + '//' + targetHostAndPort + options.path;
       options.headers['Host'] = targetHostAndPort;
 	  options.proxy = proxyHostname + ':' + proxyPort;
-	  //options.proxy_request = protocol + '//' + targetHostAndPort;
     }
   };
   if ('https:' === protocol &&
@@ -211,22 +206,9 @@ var _proxyRequest = function(protocol, options)
 
 var _get = function(getUrl, params, callback)
 {
-  //redirects = redirects || 5;
   getUrl = url.parse(_buildUrl(getUrl, params));
 
-  // var path = getUrl.pathname || '/';
-  // if(getUrl.query)
-  // {
-    // path += '?' + getUrl.query;
-  // }
-  var options =
-  {
-    // host: getUrl.hostname,
-    // port: _isDef(getUrl.port) ? parseInt(getUrl.port, 10) :
-      // (getUrl.protocol == 'https:' ? 443 : 80),
-    headers: { 'Accept' : 'application/xrds+xml,text/html,text/plain,*/*' }
-    //path: path
-  };
+  var options = { headers: { 'Accept' : 'application/xrds+xml,text/html,text/plain,*/*' } };
 
   var protocol = _proxyRequest(getUrl.protocol, options);
 
@@ -240,7 +222,6 @@ var _get = function(getUrl, params, callback)
   	  }
   	});
   }else{
-    //TODO
 	request({ 'url': getUrl.href, 'headers': options.headers }, function(error, response, body) {
 		if (!error && response.statusCode == 200) {
 			callback(body, response.headers, response.statusCode);
@@ -249,69 +230,14 @@ var _get = function(getUrl, params, callback)
 			return callback(error);
 		}
 	});
-	  // (protocol == 'https:' ? https : http).get(options, function(res)
-	  // {
-		// var data = '';
-		// res.on('data', function(chunk)
-		// {
-		  // data += chunk;
-		// });
-
-		// var isDone = false;
-		// var done = function()
-		// {
-		  // if (isDone) return;
-		  // isDone = true;
-
-		  // if(res.headers.location && --redirects)
-		  // {
-			// var redirectUrl = res.headers.location;
-			// if(redirectUrl.indexOf('http') !== 0)
-			// {
-			  // redirectUrl = getUrl.protocol + '//' + getUrl.hostname + ':' + options.port + (redirectUrl.indexOf('/') === 0 ? redirectUrl : '/' + redirectUrl);
-			// }
-			// _get(redirectUrl, params, callback, redirects);
-		  // }
-		  // else
-		  // {
-			// callback(data, res.headers, res.statusCode);
-		  // }
-		// }
-
-		// res.on('end', function() { done(); });
-		// res.on('close', function() { done(); });
-	  // }).on('error', function(error)
-	  // {
-		// return callback(error);
-	  // });
   }
 }
 
 var _post = function(postUrl, data, callback)
 {
-  //redirects = redirects || 5;
   postUrl = url.parse(postUrl);
-
-  // var path = postUrl.pathname || '/';
-  // if(postUrl.query)
-  // {
-    // path += '?' + postUrl.query;
-  // }
-
   var encodedData = _encodePostData(data);
-  var options =
-  {
-    // host: postUrl.hostname,
-    // path: path,
-    // port: _isDef(postUrl.port) ? postUrl.port :
-      // (postUrl.protocol == 'https:' ? 443 : 80),
-    // headers:
-    // {
-      // 'Content-Type': 'application/x-www-form-urlencoded',
-      // 'Content-Length': encodedData.length
-    // },
-    // method: 'POST'
-  };
+  var options = {};
   
   var protocol = _proxyRequest(postUrl.protocol, options);
 
@@ -324,7 +250,6 @@ var _post = function(postUrl, data, callback)
   	  }
   	}).form(data);
   }else{
-    //TODO
 	request.post({'url': postUrl.href, 'headers': { 'Content-Type': 'application/x-www-form-urlencoded', 'Content-Length': encodedData.length } }, function (error, response, body) {
   	  if (!error && response.statusCode == 200) {
     		callback(body, response.headers, response.statusCode);
@@ -332,38 +257,6 @@ var _post = function(postUrl, data, callback)
     		return callback(error);
   	  }
   	}).form(data);
-	
-    // (protocol == 'https:' ? https : http).request(options, function(res)
-    // {
-      // var data = '';
-      // res.on('data', function(chunk)
-      // {
-        // data += chunk;
-      // });
-  
-      // var isDone = false;
-      // var done = function()
-      // {
-        // if (isDone) return;
-        // isDone = true;
-  
-        // if(res.headers.location && --redirects)
-        // {
-          // _post(res.headers.location, data, callback, redirects);
-        // }
-        // else
-        // {
-          // callback(data, res.headers, res.statusCode);
-        // }
-      // }
-  
-      // res.on('end', function() { done(); });
-      // res.on('close', function() { done(); });
-    // }).on('error', function(error)
-    // {
-      // return callback(error);
-    // }).end(encodedData);
-  // }
 }
 
 var _encodePostData = function(data)
