@@ -187,7 +187,7 @@ var _proxyRequest = function(protocol, options)
 
       var targetHostAndPort = (isNaN(options.port) || (options.port === null)) ? targetHost : targetHost + ':' + options.port;
       options.headers['Host'] = targetHostAndPort;
-	  options.proxy = proxyHostname + ':' + proxyPort;
+	    options.proxy = proxyHostname + ':' + proxyPort;
     }
   };
   if ('https:' === protocol &&
@@ -208,36 +208,36 @@ var _get = function(getUrl, params, callback)
 {
   getUrl = url.parse(_buildUrl(getUrl, params));
 
-  var options = { headers: { 'Accept' : 'application/xrds+xml,text/html,text/plain,*/*' } };
+  var options = { host: getUrl.hostname, headers: { 'Accept' : 'application/xrds+xml,text/html,text/plain,*/*' } };
 
   var protocol = _proxyRequest(getUrl.protocol, options);
 
   if(options.proxy !== undefined){
   	request({'url': getUrl.href, 'proxy': options.proxy, 'headers': options.headers }, function (error, response, body) {
   	  if (!error && response.statusCode == 200) {
-		callback(body, response.headers, response.statusCode);
+		    callback(body, response.headers, response.statusCode);
   	  } else {
-		console.log(error);
-		return callback(error);
+		    return callback(error);
   	  }
   	});
   }else{
-	request({ 'url': getUrl.href, 'headers': options.headers }, function(error, response, body) {
-		if (!error && response.statusCode == 200) {
-			callback(body, response.headers, response.statusCode);
-		} else {
-			console.log(error);
-			return callback(error);
-		}
-	});
+  	request({ 'url': getUrl.href, 'headers': options.headers }, function(error, response, body) {
+  		if (!error && response.statusCode == 200) {
+  			callback(body, response.headers, response.statusCode);
+  		} else {
+  			return callback(error);
+  		}
+  	});
   }
 }
 
 var _post = function(postUrl, data, callback)
 {
   postUrl = url.parse(postUrl);
+  
   var encodedData = _encodePostData(data);
-  var options = {};
+  
+  var options = { host: postUrl.hostname };
   
   var protocol = _proxyRequest(postUrl.protocol, options);
 
@@ -250,13 +250,13 @@ var _post = function(postUrl, data, callback)
   	  }
   	}).form(data);
   }else{
-	request.post({'url': postUrl.href, 'headers': { 'Content-Type': 'application/x-www-form-urlencoded', 'Content-Length': encodedData.length } }, function (error, response, body) {
-	  if (!error && response.statusCode == 200) {
-			callback(body, response.headers, response.statusCode);
-	  } else {
-			return callback(error);
-	  }
-	}).form(data);
+  	request.post({'url': postUrl.href, 'headers': { 'Content-Type': 'application/x-www-form-urlencoded', 'Content-Length': encodedData.length } }, function (error, response, body) {
+  	  if (!error && response.statusCode == 200) {
+  			callback(body, response.headers, response.statusCode);
+  	  } else {
+  			return callback(error);
+  	  }
+  	}).form(data);
   }
 }
 
