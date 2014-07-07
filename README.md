@@ -19,8 +19,15 @@ Go to
 http://localhost:8888/authenticate?openid_identifier=https://login.launchpad.net //change the value of openid_identifier for your favorite OpenID provider
 ```
 
-## License
-
-MIT
-
-**Free Software**
+## Use through proxy
+You have to set this environments variables on your system
+* For HTTP:
+```
+ HTTP_PROXY_HOST=http://myproxy.net
+ HTTP_PROXY_PORT=8080
+```
+* For HTTPS:
+```
+ HTTPS_PROXY_HOST=https://myproxy.net
+ HTTPS_PROXY_PORT=8080
+```
