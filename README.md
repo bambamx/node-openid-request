@@ -5,19 +5,21 @@ openid-request takes as baseline the project **node-openid** (https://github.com
 All rights reserved to the owners of each project.
 
 ### Install
-```npm install openid-request```
+```javascript
+npm install openid-request
+```
 
 #### Version
-----
+=======================
 0.1.1
 
 #### Use
------------
+=======================
 -Example: https://github.com/bambamx/node-openid-request/raw/master/sample.js
 
 
 #### License
-----
+=======================
 MIT
 
 **Free Software**
