@@ -1,4 +1,4 @@
-# OpenID-Request -- OpenID Node.js client
+# OpenID-Request -- OpenID Node.js client v0.1.4
 
 Openid-request takes as baseline the project **node-openid** (https://github.com/havard/node-openid) (0.5.9) and refactors the http.get and http.post to handle the proxy request with (mikeal/request).
 
