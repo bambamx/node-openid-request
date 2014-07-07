@@ -160,17 +160,10 @@ var _buildUrl = function(theUrl, params)
 var _proxyRequest = function(protocol, options)
 {
   /*
-  If process.env['HTTP_PROXY_HOST'] and the env variable `HTTP_PROXY_POST`
-  are set, make sure path and the header Host are set to target url.
-
-  Similarly, `HTTPS_PROXY_HOST` and `HTTPS_PROXY_PORT` can be used
-  to proxy HTTPS traffic.
-
+  Set this ENV vars on your system for PROXY request.
   Proxies Example:
-      export HTTP_PROXY_HOST=localhost
-      export HTTP_PROXY_PORT=8080
-      export HTTPS_PROXY_HOST=localhost
-      export HTTPS_PROXY_PORT=8442
+      export HTTP_PROXY=http://localhost:8080
+      export HTTPS_PROXY=https://localhost:8080
 
   Function returns protocol which should be used for network request, one of
   http: or https:
@@ -179,25 +172,21 @@ var _proxyRequest = function(protocol, options)
   var newProtocol = protocol;
   if (!targetHost) return;
   var updateOptions = function (envPrefix) {
-    var proxyHostname = process.env[envPrefix + '_PROXY_HOST'].trim();
-    var proxyPort = parseInt(process.env[envPrefix + '_PROXY_PORT'], 10);
-    if (proxyHostname.length > 0 && ! isNaN(proxyPort)) {
+    var proxy = process.env[envPrefix + '_PROXY'].trim();
+    if (proxy.length > 0) {
 		if (! options.headers) options.headers = {};
 
-		var targetHostAndPort = (isNaN(options.port) || (options.port === null)) ? targetHost : targetHost + ':' + options.port;
-		options.headers['Host'] = targetHostAndPort;
-		options.proxy = proxyHostname + ':' + proxyPort;
+		options.headers['Host'] = targetHost;
+		options.proxy = proxy;
     }
   };
   if ('https:' === protocol &&
-      !! process.env['HTTPS_PROXY_HOST'] &&
-      !! process.env['HTTPS_PROXY_PORT']) {
+      !! process.env['HTTPS_PROXY']) {
     updateOptions('HTTPS');
     // Proxy server request must be done via http... it is responsible for
     // Making the https request...
     newProtocol = 'http:';
-  } else if (!! process.env['HTTP_PROXY_HOST'] &&
-             !! process.env['HTTP_PROXY_PORT']) {
+  } else if (!! process.env['HTTP_PROXY']) {
     updateOptions('HTTP');
   }
   return newProtocol;
