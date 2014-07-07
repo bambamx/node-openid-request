@@ -1,6 +1,6 @@
 # OpenID-Request -- OpenID Node.js client
 
-openid-request takes as baseline the project **node-openid** (https://github.com/havard/node-openid) (0.5.9) and refactors the http.get and http.post to use the package **request** (https://github.com/mikeal/request) (2.36.0).
+Openid-request takes as baseline the project **node-openid** (https://github.com/havard/node-openid) (0.5.9) and refactors the http.get and http.post to handle the proxy request with (mikeal/request).
 
 All rights reserved to the owners of each project.
 
@@ -9,13 +9,15 @@ All rights reserved to the owners of each project.
 npm install openid-request
 ```
 
-## Version
-
-0.1.1
-
 ## Use
-
--Example: https://github.com/bambamx/node-openid-request/raw/master/sample.js
+Run the sample.js file
+```javascript
+node sample.js
+```
+Go to
+```javascript
+http://localhost:8888/authenticate?openid_identifier=https://login.launchpad.net //change the value of openid_identifier for your favorite OpenID provider
+```
 
 ## License
 
