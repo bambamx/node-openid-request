@@ -9,7 +9,7 @@ All rights reserved to the owners of each project.
 npm install openid-request
 ```
 
-## Use
+## Use/Example
 Run the sample.js file
 ```javascript
 node sample.js
