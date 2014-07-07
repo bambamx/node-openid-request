@@ -1,4 +1,4 @@
-# OpenID-Request -- OpenID Node.js client
+# OpenID-Request -- OpenID Node.js client v0.1.4
 
 Openid-request takes as baseline the project **node-openid** (https://github.com/havard/node-openid) (0.5.9) and refactors the http.get and http.post to handle the proxy request with (mikeal/request).
 
@@ -23,11 +23,6 @@ http://localhost:8888/authenticate?openid_identifier=https://login.launchpad.net
 You have to set this environments variables on your system
 * For HTTP:
 ```
- HTTP_PROXY_HOST=http://myproxy.net
- HTTP_PROXY_PORT=8080
-```
-* For HTTPS:
-```
- HTTPS_PROXY_HOST=https://myproxy.net
- HTTPS_PROXY_PORT=8080
+ HTTP_PROXY=http://myproxy.net:8080
+ HTTPS_PROXY=https://myproxy.net:8080 
 ```
