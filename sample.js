@@ -1,4 +1,4 @@
-var openid = require('openid-request');
+var openid = require('./openid-request');
 var url = require('url');
 var querystring = require('querystring');
 

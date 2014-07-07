@@ -1,6 +1,8 @@
-/* OpenID for node.js
+/* OpenID-Request for node.js
  *
- * https://github.com/bambamx/node-openid-request
+ * Copyright (C) 2014 by Rodrigo Montaño (https://github.com/bambamx/node-openid-request)
+ *
+ * Base Proyect by Håvard Stranden:  https://github.com/havard/node-openid
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,8 +27,6 @@
 
 var convert = require('./lib/convert'),
     crypto = require('crypto'),
-    http = require('http'),
-    https = require('https'),
 	request = require('request'),
     querystring = require('querystring'),
     url = require('url'),
@@ -182,12 +182,11 @@ var _proxyRequest = function(protocol, options)
     var proxyHostname = process.env[envPrefix + '_PROXY_HOST'].trim();
     var proxyPort = parseInt(process.env[envPrefix + '_PROXY_PORT'], 10);
     if (proxyHostname.length > 0 && ! isNaN(proxyPort)) {
+		if (! options.headers) options.headers = {};
 
-      if (! options.headers) options.headers = {};
-
-      var targetHostAndPort = (isNaN(options.port) || (options.port === null)) ? targetHost : targetHost + ':' + options.port;
-      options.headers['Host'] = targetHostAndPort;
-	    options.proxy = proxyHostname + ':' + proxyPort;
+		var targetHostAndPort = (isNaN(options.port) || (options.port === null)) ? targetHost : targetHost + ':' + options.port;
+		options.headers['Host'] = targetHostAndPort;
+		options.proxy = proxyHostname + ':' + proxyPort;
     }
   };
   if ('https:' === protocol &&
@@ -244,17 +243,17 @@ var _post = function(postUrl, data, callback)
   if(options.proxy !== undefined){
   	request.post({'url': postUrl.href, 'proxy': options.proxy, 'headers': { 'Content-Type': 'application/x-www-form-urlencoded', 'Content-Length': encodedData.length } }, function (error, response, body) {
   	  if (!error && response.statusCode == 200) {
-    		callback(body, response.headers, response.statusCode);
+    	callback(body, response.headers, response.statusCode);
   	  } else {
-    		return callback(error);
+		return callback(error);
   	  }
   	}).form(data);
   }else{
   	request.post({'url': postUrl.href, 'headers': { 'Content-Type': 'application/x-www-form-urlencoded', 'Content-Length': encodedData.length } }, function (error, response, body) {
   	  if (!error && response.statusCode == 200) {
-  			callback(body, response.headers, response.statusCode);
+  		callback(body, response.headers, response.statusCode);
   	  } else {
-  			return callback(error);
+  		return callback(error);
   	  }
   	}).form(data);
   }
