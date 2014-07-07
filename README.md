@@ -10,16 +10,15 @@ npm install openid-request
 ```
 
 ## Version
-=======================
+
 0.1.1
 
 ## Use
-=======================
+
 -Example: https://github.com/bambamx/node-openid-request/raw/master/sample.js
 
-
 ## License
-=======================
+
 MIT
 
 **Free Software**
