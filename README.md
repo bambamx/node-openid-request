@@ -21,7 +21,6 @@ http://localhost:8888/authenticate?openid_identifier=https://login.launchpad.net
 
 ## Use through proxy
 You have to set this environments variables on your system
-* For HTTP:
 ```
  HTTP_PROXY=http://myproxy.net:8080
  HTTPS_PROXY=https://myproxy.net:8080 
